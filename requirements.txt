@@ -1,0 +1,7 @@
+aiohttp
+pydantic>=2.0
+pydantic-settings>=2.0
+google-genai
+vertexai
+google-auth
+jsonref 
