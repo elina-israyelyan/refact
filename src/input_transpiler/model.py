@@ -1,6 +1,6 @@
 from typing import Type, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Condition(BaseModel):
@@ -10,7 +10,7 @@ class Condition(BaseModel):
 class StandardFactSearchInputQuery(BaseModel):
     conditions: list[Condition]
     entity: Any
-    attribute: Type["StandardFactSearchInputQuery"] | None
+    attribute: Type["StandardFactSearchInputQuery"] | None = Field(default=None)
 
 
 class InputQuery(BaseModel):

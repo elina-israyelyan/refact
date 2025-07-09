@@ -1,31 +1,40 @@
-import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig
-from google.oauth2 import service_account
 import json
 import os
+
+import vertexai
+from google.oauth2 import service_account
+from vertexai.generative_models import GenerationConfig, GenerativeModel
 
 
 def load_credentials_from_file(service_account_path: str):
     """Loads Google Cloud credentials from a service account JSON file."""
     try:
-        return service_account.Credentials.from_service_account_file(service_account_path)
+        return service_account.Credentials.from_service_account_file(
+            service_account_path
+        )
     except FileNotFoundError:
-        raise FileNotFoundError(f"Service account file not found: {service_account_path}")
+        raise FileNotFoundError(
+            f"Service account file not found: {service_account_path}"
+        )
     except Exception as e:
-        raise RuntimeError(f"Error loading credentials from {service_account_path}: {e}")
+        raise RuntimeError(
+            f"Error loading credentials from {service_account_path}: {e}"
+        )
 
 
 def get_project_id_from_file(service_account_path: str) -> str:
     """Extracts the project_id from the service account JSON file."""
     try:
-        with open(service_account_path, 'r') as f:
+        with open(service_account_path, "r") as f:
             data = json.load(f)
             project_id = data.get("project_id")
             if not project_id:
                 raise ValueError("Key 'project_id' not found in service account file.")
             return project_id
     except FileNotFoundError:
-        raise FileNotFoundError(f"Service account file not found: {service_account_path}")
+        raise FileNotFoundError(
+            f"Service account file not found: {service_account_path}"
+        )
     except (json.JSONDecodeError, ValueError, KeyError) as e:
         raise RuntimeError(f"Error reading project_id from {service_account_path}: {e}")
 
@@ -34,8 +43,7 @@ def generate_text_vertexai(
     project_id: str,
     credentials,  # Pass the loaded credentials object
     prompt: str,
-        location: str | None = None,
-
+    location: str | None = None,
     model_name: str = "gemini-2.0-flash",  # Default model, can be overridden
 ) -> str:
     """
@@ -87,7 +95,7 @@ if __name__ == "__main__":
         # --- Configuration ---
         # IMPORTANT: Replace with the actual path to your service account key file
         # Use environment variables or secure config management in production.
-        SERVICE_ACCOUNT_FILE = "/home/elina-jan/Downloads/amaros-420712-1f28953e284e.json"
+        SERVICE_ACCOUNT_FILE = os.environ.get("GEMINI_SA_CREDENTIAL_PATH")
         LOCATION = None
         MODEL_NAME = "gemini-2.0-flash"  # Or "gemini-1.0-pro", etc.
         USER_PROMPT = "Explain how AI works."

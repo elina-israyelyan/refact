@@ -1,3 +1,5 @@
+from local_logging import logger
+
 from llm.base import BaseLLMClient
 
 from .model import InputQuery
@@ -21,7 +23,7 @@ class InputTranspiler:
         try:
             return InputQuery.model_validate_json(response_text)
         except Exception as e:
-            print(f"Error parsing input query: {e}")
+            logger.error(f"Error parsing input query: {e}")
             return InputQuery(
                 query=input_prompt, intent="unknown", needs_factual_verification=True
             )

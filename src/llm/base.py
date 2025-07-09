@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Type, Any
+from typing import Any, Type
 
 from google.genai import types as genai_types
 from pydantic import BaseModel
 
 from .models.history import HistoryPoint
+import copy
 
 
 class BaseLLMClient(ABC):
@@ -27,31 +28,29 @@ class BaseLLMClient(ABC):
         prompt: str,
         response_schema: Type[BaseModel],
         history: list[HistoryPoint] | None = None,
-        model_name: str| None = None,
+        model_name: str | None = None,
     ) -> str:
         """Generate content using the LLM with an optional response schema"""
         raise NotImplementedError
 
     @property
-    @abstractmethod
     def default_model_name(self) -> str:
         """Get the default model name"""
-        raise NotImplementedError
+        return self._default_model_name
 
     @default_model_name.setter
-    @abstractmethod
     def default_model_name(self, model_name: str) -> None:
         """Set the default model name"""
-        raise NotImplementedError
+        self._default_model_name = model_name
 
     @property
-    @abstractmethod
-    def default_generation_config(self) -> Any:
+    def default_generation_config(self) -> genai_types.GenerateContentConfigDict:
         """Get the default generation configuration"""
-        raise NotImplementedError
+        return copy.deepcopy(self._default_generation_config)
 
     @default_generation_config.setter
-    @abstractmethod
-    def default_generation_config(self, config: Any) -> None:
+    def default_generation_config(
+        self, config: genai_types.GenerateContentConfigDict
+    ) -> None:
         """Set the default generation configuration"""
-        raise NotImplementedError
+        self._default_generation_config = config

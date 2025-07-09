@@ -1,3 +1,4 @@
+from local_logging import logger
 from .base import ActionSet
 
 
@@ -20,7 +21,4 @@ class MathActions(ActionSet):
 
     @staticmethod
     def power(a: float, b: float) -> float:
-        return float(a ** b)
-
-if __name__ == "__main__":
-    print(MathActions().list_action_methods())
+        return float(a**b)

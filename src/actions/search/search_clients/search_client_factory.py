@@ -1,0 +1,14 @@
+from settings import settings
+
+from .base import BaseWikiClient
+from .mock_client import MockWikiClient
+from .wiki_client import WikiClient
+
+
+class SearchClientFactory:
+    @staticmethod
+    def get_client(client_type: str = "") -> BaseWikiClient:
+        client_type = client_type or settings.WIKI_CLIENT_TYPE
+        if client_type == "mock":
+            return MockWikiClient()
+        return WikiClient()

@@ -1,29 +1,29 @@
-from typing import Any
 import inspect
+from typing import Any, Type, Literal
+
+from local_logging import logger
 from .model import BaseAction
+from pydantic import BaseModel, create_model
 
 
 class ActionSet:
-    def call_methods(self, method_name: str, *args, **kwargs) -> Any:
-        return getattr(self, method_name)(*args, **kwargs)
+    def __init__(self):
+        self.actions: list[BaseAction] = []
+        self.action_models: list[Type[BaseModel]] = []
 
-    def list_action_methods(self) -> list[BaseAction]:
-        """
-        Returns a dictionary of all developer-defined methods (excluding inherited, dunder, and private methods),
-        their arguments, and whether they are async.
-        Example:
-        {
-            'sum': {
-                'args': {'a': 'float', 'b': 'float'},
-                'is_async': False
-            },
-            'search': {
-                'args': {'entity': 'str'},
-                'is_async': True
-            }
-        }
-        """
-        methods = []
+    def create_pydantic_base_models_for_actions(self) -> list[Type[BaseModel]]:
+        if self.action_models:
+            return self.action_models
+        models = []
+        for action in self.actions or self.list_actions():
+            models.append(create_model(f"{action.action_set_name}___{action.action_method_name}", action_method_name=Literal[action.action_method_name], **{arg.arg_name: arg.arg_type for arg in action.args}))  # type: ignore
+        return models
+
+    def list_actions(self) -> list[BaseAction]:
+
+        if self.actions:
+            return self.actions
+        actions = []
         for name, member in inspect.getmembers(self.__class__):
             if name.startswith("_"):
                 continue  # Skip dunder and private
@@ -44,22 +44,17 @@ class ActionSet:
                     continue
                 annotation = param.annotation
                 if annotation is inspect.Parameter.empty:
-                    arg_type = "Any"
+                    arg_type = Any
                 else:
-                    arg_type = str(
-                        annotation
-                    )  # TODO[LOW]: to have a json serializable output. think of a better way.
+                    arg_type = annotation
                 args.append(BaseAction.ActionArgs(arg_name=param_name, arg_type=arg_type))
-            is_async = inspect.iscoroutinefunction(member) or inspect.isasyncgenfunction(member)
-            methods.append(
+
+            actions.append(
                 BaseAction(
                     action_method_name=name,
                     args=args,
-                    is_async=is_async,
                     action_set_name=self.__class__.__name__,
                 )
             )
-        return methods
-
-
-# ActionSet[int]().call_methods("sss" "") + 23
+        self.actions = actions
+        return actions
