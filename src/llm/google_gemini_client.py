@@ -33,7 +33,7 @@ class GeminiClient(BaseLLMClient):
         location: str | None = None,
         default_model_name: str | None = None,
         default_generation_config: genai_types.GenerateContentConfigDict | None = None,
-    ):
+    ) -> "GeminiClient":
         if default_model_name is None:
             default_model_name = "gemini-2.0-flash"
         credentials = service_account.Credentials.from_service_account_file(

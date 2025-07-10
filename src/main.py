@@ -10,7 +10,7 @@ from settings import settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    app.state.llm_client = await ClientFactory.get_client(settings.LLM_CLIENT_TYPE)
+    app.state.llm_client = ClientFactory.get_client(settings.LLM_CLIENT_TYPE)
     yield
 
 

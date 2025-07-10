@@ -1,3 +1,4 @@
+from .base import BaseLLMClient
 from .google_gemini_client import GeminiClient
 from .mock_client import MockLLMClient
 from settings import settings
@@ -5,7 +6,7 @@ from settings import settings
 
 class ClientFactory:
     @staticmethod
-    async def get_client(client_type: str):
+    async def get_client(client_type: str) -> BaseLLMClient:
         if client_type == "gemini":
             return await GeminiClient.create(
                 service_account_path=settings.GEMINI_SA_CREDENTIAL_PATH

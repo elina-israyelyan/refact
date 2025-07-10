@@ -22,7 +22,7 @@ class MockLLMClient(BaseLLMClient):
         self._default_generation_config = {}
 
     @classmethod
-    async def create(
+    def create(
         cls,
         service_account_path: str,
         location: str | None = None,
