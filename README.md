@@ -39,7 +39,7 @@ The API uses environment variables for configuration:
 ```bash
 export GEMINI_SA_CREDENTIAL_PATH=/path/to/your/credentials.json
 export LLM_CLIENT_TYPE=gemini  # Options: 'gemini', 'mock'
-export WIKI_CLIENT_TYPE=real   # Options: 'real', 'mock'
+export SEARCH_CLIENT_TYPE=wiki   # Options: 'wiki', 'mock'
 ```
 
 ### Configuration Options
@@ -47,8 +47,8 @@ export WIKI_CLIENT_TYPE=real   # Options: 'real', 'mock'
 - **LLM_CLIENT_TYPE**: 
   - `gemini`: Use Google Gemini models (requires credentials)
   - `mock`: Use mock LLM for testing
-- **WIKI_CLIENT_TYPE**:
-  - `real`: Use real Wikipedia API
+- **SEARCH_CLIENT_TYPE**:
+  - `wiki`: Use real Wikipedia API
   - `mock`: Use mock search responses for testing
 
 ## 🚀 Running the API
@@ -203,5 +203,5 @@ For testing without external dependencies:
 
 ```bash
 export LLM_CLIENT_TYPE=mock
-export WIKI_CLIENT_TYPE=mock
+export SEARCH_CLIENT_TYPE=mock
 ```

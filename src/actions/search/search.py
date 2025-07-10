@@ -6,7 +6,7 @@ from ..base import ActionSet
 from .search_clients.search_client_factory import SearchClientFactory
 from .search_clients.wiki_client import BaseWikiClient
 
-SEARCH_CLIENT = SearchClientFactory.get_client(settings.WIKI_CLIENT_TYPE)
+SEARCH_CLIENT = SearchClientFactory.get_client(settings.SEARCH_CLIENT_TYPE)
 
 
 class SearchActions(ActionSet):
