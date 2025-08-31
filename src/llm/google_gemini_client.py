@@ -1,18 +1,17 @@
-import copy
 import json
-import traceback
 from typing import Type
 
+import jsonref
 import vertexai
 from google.genai import types as genai_types
 from google.oauth2 import service_account
 from pydantic import BaseModel
 from vertexai.generative_models import GenerativeModel, GenerationConfig, Content, Part
-import jsonref
+
+from local_logging import logger
 from utils.pydantic_schema import remove_null_type_from_optional_fields
 from .base import BaseLLMClient
 from .models.history import HistoryPoint
-from local_logging import logger
 
 
 class GeminiClient(BaseLLMClient):
@@ -27,7 +26,7 @@ class GeminiClient(BaseLLMClient):
         self._default_model_name = default_model_name
 
     @classmethod
-    async def create(
+    def create(
         cls,
         service_account_path: str,
         location: str | None = None,
